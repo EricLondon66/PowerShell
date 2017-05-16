@@ -1,0 +1,4 @@
+PROIV V8 Client VM
+PROIV V8 Gateway VM
+PROIVv8ApplicationServices
+PROIVv8ManagementServices

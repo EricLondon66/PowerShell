@@ -1,0 +1,10 @@
+ComputerName,Service
+dev-hrs-app-001,"PROIV V8 Client VM"
+dev-hrs-app-001,"PROIV V8 Gateway VM"
+dev-hrs-app-001,"PROIVv8ApplicationServices"
+dev-hrs-app-001,"PROIVv8ManagementServices"
+dev-hrs-web-001,"Apache2.4"
+dev-hrs-web-001,"RRSD"
+dev-hrs-web-001,"WVDEV"
+dev-hrs-web-002,"Apache2.4"
+dev-hrs-web-002,"glassfish-MVDEV"

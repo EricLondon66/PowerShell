@@ -1,0 +1,25 @@
+Changed database context to 'RLU'.
+Msg 4701, Level 16, State 1, Server UAT-SQL-HRS-001, Line 8
+Cannot find the object "QMUL_VERIFIED_AS_NOT_DUPE" because it does not exist or you do not have permissions.
+Msg 208, Level 16, State 1, Server UAT-SQL-HRS-001, Line 2
+Invalid object name 'RLU_TABLESAFE.QM_DEV_TEAM.QMUL_VERIFIED_AS_NOT_DUPE_staging'.
+Msg 208, Level 16, State 1, Server UAT-SQL-HRS-001, Line 1
+Invalid object name 'RLU_TABLESAFE.QM_DEV_TEAM.QMUL_GRADE_CATEGORIES_staging'.
+Msg 208, Level 16, State 1, Server UAT-SQL-HRS-001, Line 1
+Invalid object name 'RLU_TABLESAFE.QM_DEV_TEAM.QMUL_FEED_EXCEPTIONS_staging'.
+Msg 1088, Level 16, State 11, Server UAT-SQL-HRS-001, Line 1
+Cannot find the object "QM_DEV_TEAM.QMUL_ALL_POTENTIAL_POSTS_DUPES" because it does not exist or you do not have permissions.
+
+(7 rows affected)
+
+(10 rows affected)
+
+(22 rows affected)
+
+(16 rows affected)
+
+(5 rows affected)
+
+(2568 rows affected)
+
+(1 rows affected)

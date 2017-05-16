@@ -1,0 +1,10 @@
+ComputerName,Service
+uat-hrs-app-001,"PROIV V8 Client VM"
+uat-hrs-app-001,"PROIV V8 Gateway VM"
+uat-hrs-app-001,"PROIVv8ApplicationServices"
+uat-hrs-app-001,"PROIVv8ManagementServices"
+uat-hrs-web-001,"Apache2.4"
+uat-hrs-web-001,"RRSU"
+uat-hrs-web-001,"WVUAT"
+uat-hrs-web-002,"Apache2.4"
+uat-hrs-web-002,"glassfish-MVUAT"

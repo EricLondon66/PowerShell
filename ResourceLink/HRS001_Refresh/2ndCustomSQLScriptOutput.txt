@@ -1,0 +1,43 @@
+Changed database context to 'RLL'.
+
+(41 rows affected)
+
+(196 rows affected)
+
+(24 rows affected)
+Msg 8101, Level 16, State 1, Server SQL-HRS-001, Line 1
+An explicit value for the identity column in table 'QM_DEV_TEAM.QMUL_ALL_POTENTIAL_POSTS_DUPES' can only be specified when a column list is used and IDENTITY_INSERT is ON.
+
+(7 rows affected)
+
+(10 rows affected)
+
+(23 rows affected)
+
+(16 rows affected)
+
+(5 rows affected)
+
+(2500 rows affected)
+
+(1 rows affected)
+Changed database context to 'RLL'.
+Msg 15151, Level 16, State 1, Server SQL-HRS-001, Line 1
+Cannot find the user 'Developer_Team_RW', because it does not exist or you do not have permission.
+Changed database context to 'RLL'.
+Msg 15151, Level 16, State 1, Server SQL-HRS-001, Line 1
+Cannot find the user 'Developer_Team_RW', because it does not exist or you do not have permission.
+Changed database context to 'RLL'.
+Msg 15151, Level 16, State 1, Server SQL-HRS-001, Line 1
+Cannot find the user 'Developer_Team_RW', because it does not exist or you do not have permission.
+Changed database context to 'RLL'.
+Msg 15151, Level 16, State 1, Server SQL-HRS-001, Line 1
+Cannot find the user 'Developer_Team_RW', because it does not exist or you do not have permission.
+Changed database context to 'RLL'.
+Msg 15151, Level 16, State 1, Server SQL-HRS-001, Line 1
+Cannot find the user 'Developer_Team_RW', because it does not exist or you do not have permission.
+Changed database context to 'RLL'.
+Changed database context to 'RLL'.
+Changed database context to 'RLL'.
+Changed database context to 'RLL'.
+Changed database context to 'RLL'.
