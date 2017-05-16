@@ -214,6 +214,7 @@ Until ($strQuit -eq "N")
 "`n Ready to do more stuff..."
 
 # log the logins on a database
+# Setup task manager to run the following line: powershell –File "D:\FilesPowershell\WatchSqlDbLogin.ps1"
 
 import-module dbatools
 Watch-SqlDbLogin -SqlServer SQL-CTL-11 -Database DatabaseLogins -Table DbLogins -ServersFromFile D:\FilesTXT\SQL_Servers_MGT.txt
