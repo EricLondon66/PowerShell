@@ -1,0 +1,1 @@
+.\RefreshTemplate.ps1 SourceServer SourceDB \\sql-ctl-12\h$\MSSQL\BACKUP\SQL-CTL-12\Test1\FULL DestinationServer DestinationDBName dynamic H:\RestoreDBpath
