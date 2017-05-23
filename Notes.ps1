@@ -1,4 +1,4 @@
-﻿#perform the inventory and create the excel spreadsheet
+#perform the inventory and create the excel spreadsheet
 
 .\Get-SqlServerInventoryToClixml.ps1 -ComputerName BIR-DQS-01,BIR-SAS-01,BIR-SQL-01,BIR-SQL-02,BIR-SQL-03,BIR-WEB-01,BIR-WEB-02,CFG-SQL-01,RDS-BIR-01,SQL-COH-01,SQL-COP-01,SQL-COR-01,SQL-CSR-01,SQL-CTL-11,SQL-CTL-12,SQL-FIN-01,SQL-G4S-01,SQL-GEN-02,SQL-GEN-11,SQL-GEN-12,SQL-HRS-01,SQL-KIN-01,SQL-LND-01,SQL-MGT-01,SQL-MGT-02,SQL-MGT-03,SQL-MGT-04,SQL-MGT-001,SQL-MGT-501,SQL-PAV-01,SQL-QPS-01,SQL-RST-11,SQL-RST-12,SQL-SCU-01,SQL-SWD-01,SQL-TCO-01,SQL-THQ-01,UAT-BIR-DQS-01,UAT-BIR-SAS-01,UAT-BIR-SQL-01,UAT-BIR-SQL-02,UAT-BIR-SQL-03,UAT-BIR-WEB-01,UAT-BIR-WEB-02,UAT-RDS-BIR-01,UAT-SQL-COP-01,UAT-SQL-GEN-11,UAT-SQL-GEN-12,UAT-SQL-HRS-01,UAT-SQL-PAV-01,UAT-SQL-RST-11,UAT-SQL-RST-12,UAT-SQL-THQ-01
 
@@ -18,6 +18,7 @@ diff (Get-ADGroupMember "GG-FIN-Application-Users") (Get-ADGroupMember "GG-UAT-F
 diff (Get-ADGroupMember "GG-FIN-Application-Users") (Get-ADGroupMember "GG-FIN-BIFUsers") -Property 'SamAccountName' -IncludeEqual
 
 #AD - find computers like SQL in name
+Import-module ActiveDirectory
 Get-ADComputer -filter {(enabled -eq "false") -and (Name -like "*SQL*")}
 
 Get-ADComputer -filter {(enabled -eq "true") -and (Name -like "*SQL*")} | Select-Object Name| Sort-Object Name > SQL_Servers_Report.txt
@@ -214,7 +215,59 @@ Until ($strQuit -eq "N")
 "`n Ready to do more stuff..."
 
 # log the logins on a database
-# Setup task manager to run the following line: powershell –File "D:\FilesPowershell\WatchSqlDbLogin.ps1"
+# powershell –File "D:\FilesPowershell\WatchSqlDbLogin.ps1"
 
 import-module dbatools
 Watch-SqlDbLogin -SqlServer SQL-CTL-11 -Database DatabaseLogins -Table DbLogins -ServersFromFile D:\FilesTXT\SQL_Servers_MGT.txt
+
+##run sql command on multiple servers
+
+$compArray = get-content D:\FilesPowershell\SQL_Servers_AlwaysOn.txt
+
+foreach($strComputer in $compArray)
+{
+sqlcmd -S $strComputer -d master -i D:\FilesSQL\fn_hadr_group_is_primary.sql -o $strComputer-result.txt
+}
+
+##Failover alwaysOn
+
+Import-Module SQLPS -DisableNameChecking
+
+## get details of the availability groups on a server
+Get-DbaAvailabilityGroup -SqlServer UAT-SQL-GEN-12 
+
+## failover the availability group to the secondary
+Switch-SqlAvailabilityGroup -Path SQLSERVER:Sql\UAT-SQL-GEN-12\DEFAULT\AvailabilityGroups\uatsqlgenag
+
+# The following example shows the full process for preparing a secondary database from a database on the server instance that hosts the primary 
+# replica of an availability group, adding the database to an availability group (as a primary database), and then joining the secondary 
+# database to the availability group. First, the example backs up the database and its transaction log. Then the example restores the 
+# database and log backups to the server instances that host a secondary replica.
+
+$DatabaseName = 'GVE_UAT'
+$PrimaryServer = 'UAT-SQL-GEN-12'
+$SecondaryServer = 'UAT-SQL-GEN-11'
+$MyAg = 'uatsqlgenag'
+$DatabaseBackupFile = "\\SQL-CTL-11\Migration$\$DatabaseName.bak"  
+$LogBackupFile = "\\SQL-CTL-11\Migration$\$DatabaseName-logfile.trn"  
+$MyAgPrimaryPath = "SQLSERVER:\SQL\$PrimaryServer\DEFAULT\AvailabilityGroups\$MyAg"  
+$MyAgSecondaryPath = "SQLSERVER:\SQL\$SecondaryServer\DEFAULT\AvailabilityGroups\$MyAg"  
+
+#make sure database is in full recovery mode
+sqlcmd -S $PrimaryServer -d master -Q "ALTER DATABASE [GVE_UAT] SET RECOVERY FULL WITH NO_WAIT;"
+
+Backup-SqlDatabase -Database $DatabaseName -BackupFile $DatabaseBackupFile -ServerInstance $PrimaryServer  
+Backup-SqlDatabase -Database $DatabaseName -BackupFile $LogBackupFile -ServerInstance $PrimaryServer -BackupAction 'Log'  
+
+Restore-SqlDatabase -Database $DatabaseName -BackupFile $DatabaseBackupFile -ServerInstance $SecondaryServer -NoRecovery  
+Restore-SqlDatabase -Database $DatabaseName -BackupFile $LogBackupFile -ServerInstance $SecondaryServer -RestoreAction 'Log' -NoRecovery  
+
+Add-SqlAvailabilityDatabase -Path $MyAgPrimaryPath -Database $DatabaseName  
+Add-SqlAvailabilityDatabase -Path $MyAgSecondaryPath -Database $DatabaseName
+
+Test-SqlDatabaseReplicaState -Path $MyAgPrimaryPath\DatabaseReplicaStates | Test-SqlDatabaseReplicaState
+
+#Remove-DbaDatabase -SqlInstance UAT-SQL-GEN-11 -Databases GVE_UAT
+
+#Remove-DbaDatabase -SqlInstance SQL-MGT-04 -Databases VMW-SRM-DC2,VMware_vCenter,VMware_vCenterVUM,VMMARE_VCENTER_VDI,VIEW_COMPOSER,VIEW_AUDIT,VeeamOne
+
