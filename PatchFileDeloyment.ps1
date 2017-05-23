@@ -1,14 +1,14 @@
-Set-Location "D:\Patching"
+Set-Location "D:\FilesPowershell"
 
-$compArray = get-content D:\Patching\DEVPatching.txt
+$compArray = get-content D:\FilesPowershell\SQL_Servers_Patch.txt
 
 $serverfile=$env:computername
 
-$PatchFileDirectory = "D:\Patching"
+$PatchFileDirectory = "\\qm.ds.qmul.ac.uk\APP\PROD\DBA\SQL_Server_Software\PATCHES"
 
-$2012PatchfilePath = "$PatchFileDirectory\SQL2012"
-$2014PatchfilePath = "$PatchFileDirectory\SQL2014"
-$2016PatchfilePath = "$PatchFileDirectory\SQL2016"
+$2012PatchfilePath = "$PatchFileDirectory\SQL_2012"
+$2014PatchfilePath = "$PatchFileDirectory\SQL_2014"
+$2016PatchfilePath = "$PatchFileDirectory\SQL_2016"
 
 $2012PatchfileName = Get-LatestFileName($2012PatchfilePath)
 $2014PatchfileName = Get-LatestFileName($2014PatchfilePath)
@@ -21,22 +21,32 @@ foreach($Server in $compArray)
 
     If ( $Server -like  "*SAS*")
     {
-        $destinationFolder = "\\$Server\H$\PATCH"
+       $destinationFolder = "\\$Server\H$\PATCH"
         if (!(Test-Path -path $destinationFolder)) {New-Item $destinationFolder -Type Directory}
+        Remove-Item "\\$Server\H$\PATCH\*" -Recurse 
         write-host "$Server SAS Server" -ForegroundColor Yellow
         Copy-Item -Path "$2012PatchfilePath\$2012PatchfileName" -Destination "$destinationFolder\$2012PatchfileName" -Recurse -Force               
         ##create powershell patch file
         $cmd = "H:\PATCH\$2012PatchfileName /qs /IAcceptSQLServerLicenseTerms /Action=Patch /AllInstances"
         $cmd | Out-File "\\$Server\H$\SQLServerPatchScript.ps1"
     }
-    elseIf ( $Server -like  "*DQS*")
+    elseIf ( $Server -like  "*DQS*" )
     {
-        write-host "$Server DQS Server : Copy File Manually" -BackgroundColor Red
+##        write-host "$Server DQS Server : Copy File Manually" -BackgroundColor Red
+           $destinationFolder = "\\$Server\H$\PATCH"
+        if (!(Test-Path -path $destinationFolder)) {New-Item $destinationFolder -Type Directory}
+        Remove-Item "\\$Server\H$\PATCH\*" -Recurse 
+        write-host "$Server SAS Server" -ForegroundColor Yellow
+        Copy-Item -Path "$2012PatchfilePath\$2012PatchfileName" -Destination "$destinationFolder\$2012PatchfileName" -Recurse -Force               
+        ##create powershell patch file
+        $cmd = "H:\PATCH\$2012PatchfileName /qs /IAcceptSQLServerLicenseTerms /Action=Patch /AllInstances"
+        $cmd | Out-File "\\$Server\H$\SQLServerPatchScript.ps1"
     }
     Else
     {
         $destinationFolder = "\\$Server\H$\PATCH"
         if (!(Test-Path -path $destinationFolder)) {New-Item $destinationFolder -Type Directory}
+        Remove-Item "\\$Server\H$\PATCH\*" -Recurse 
 
         $version =Invoke-Sqlcmd -ServerInstance $Server -Query "SELECT @@Version AS 'Version'"
         $ver=$version.Version.Substring(0,25)
@@ -44,7 +54,7 @@ foreach($Server in $compArray)
         if($ver.ToString() -Like  "Microsoft SQL Server 2012*")
         {
             ##copy patch file locally to server
-            write-host $Server $ver -BackgroundColor Green
+            write-host $Server $ver -BackgroundColor Gray
             Copy-Item -Path "$2012PatchfilePath\$2012PatchfileName" -Destination "$destinationFolder\$2012PatchfileName" -Recurse -Force               
             ##create powershell patch file
             $cmd = "H:\PATCH\$2012PatchfileName /qs /IAcceptSQLServerLicenseTerms /Action=Patch /AllInstances"
@@ -53,7 +63,8 @@ foreach($Server in $compArray)
         elseif($ver.ToString() -Like  "Microsoft SQL Server 2014*")
         {
             ##copy patch file locally to server
-            write-host $Server $ver -BackgroundColor Green
+           ## write-host "$Server $ver : SKIPPED"
+            write-host $Server $ver -BackgroundColor Cyan
             Copy-Item -Path "$2014PatchfilePath\$2014PatchfileName" -Destination "$destinationFolder\$2014PatchfileName" -Recurse -Force               
             ##create powershell patch file
             $cmd = "H:\PATCH\$2014PatchfileName /qs /IAcceptSQLServerLicenseTerms /Action=Patch /AllInstances"
