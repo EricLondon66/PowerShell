@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<test-results xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="nunit_schema_2.5.xsd" name="Pester" total="6" errors="0" failures="2" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2017-08-23" time="14:38:00">
+  <environment user="aaw337" machine-name="CLN-MS-95LQXY1" cwd="C:\Pester\HelloWorldExample" user-domain="QM" platform="Microsoft Windows 10 Enterprise|C:\WINDOWS|\Device\Harddisk0\Partition2" nunit-version="2.5.8.0" os-version="10.0.10586" clr-version="4.0.30319.42000" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="TestFixture" name="Pester" executed="True" result="Failure" success="False" time="0.6054" asserts="0" description="Pester">
+    <results>
+      <test-suite type="TestFixture" name="C:\Pester\HelloWorldExample\Get-HelloWorld.Tests.ps1" executed="True" result="Failure" success="False" time="0.6054" asserts="0" description="C:\Pester\HelloWorldExample\Get-HelloWorld.Tests.ps1">
+        <results>
+          <test-suite type="TestFixture" name="Get-HelloWorld" executed="True" result="Success" success="True" time="0.4845" asserts="0" description="Get-HelloWorld">
+            <results>
+              <test-case description="outputs 'Hello world!'" name="Get-HelloWorld.outputs 'Hello world!'" time="0.4845" asserts="0" success="True" result="Success" executed="True" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="Get Dir1" executed="True" result="Success" success="True" time="0.0179" asserts="0" description="Get Dir1">
+            <results>
+              <test-case description="outputs 'Dir1 Works'" name="Get Dir1.outputs 'Dir1 Works'" time="0.0179" asserts="0" success="True" result="Success" executed="True" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="Get Dir2" executed="True" result="Success" success="True" time="0.0255" asserts="0" description="Get Dir2">
+            <results>
+              <test-case description="outputs 'Dir2 Works'" name="Get Dir2.outputs 'Dir2 Works'" time="0.0255" asserts="0" success="True" result="Success" executed="True" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="Get Dir3" executed="True" result="Failure" success="False" time="0.0209" asserts="0" description="Get Dir3">
+            <results>
+              <test-case description="outputs 'Dir3 Works'" name="Get Dir3.outputs 'Dir3 Works'" time="0.0209" asserts="0" success="False" result="Failure" executed="True">
+                <failure>
+                  <message>Expected: {True}
+But was:  {False}</message>
+                  <stack-trace>at &lt;ScriptBlock&gt;, C:\Pester\HelloWorldExample\Get-HelloWorld.Tests.ps1: line 28
+28:         $result | Should be $true
+</stack-trace>
+                </failure>
+              </test-case>
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="Get Dir4" executed="True" result="Success" success="True" time="0.0295" asserts="0" description="Get Dir4">
+            <results>
+              <test-case description="outputs 'Dir4 Works'" name="Get Dir4.outputs 'Dir4 Works'" time="0.0295" asserts="0" success="True" result="Success" executed="True" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="Get Dir5" executed="True" result="Failure" success="False" time="0.0271" asserts="0" description="Get Dir5">
+            <results>
+              <test-case description="outputs 'Dir5 Works'" name="Get Dir5.outputs 'Dir5 Works'" time="0.0271" asserts="0" success="False" result="Failure" executed="True">
+                <failure>
+                  <message>Expected: {True}
+But was:  {False}</message>
+                  <stack-trace>at &lt;ScriptBlock&gt;, C:\Pester\HelloWorldExample\Get-HelloWorld.Tests.ps1: line 42
+42:         $result | Should be $true
+</stack-trace>
+                </failure>
+              </test-case>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
