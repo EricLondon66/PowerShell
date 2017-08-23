@@ -271,3 +271,61 @@ Test-SqlDatabaseReplicaState -Path $MyAgPrimaryPath\DatabaseReplicaStates | Test
 
 #Remove-DbaDatabase -SqlInstance SQL-MGT-04 -Databases VMW-SRM-DC2,VMware_vCenter,VMware_vCenterVUM,VMMARE_VCENTER_VDI,VIEW_COMPOSER,VIEW_AUDIT,VeeamOne
 
+Set-Location -Path C:\Pester
+
+mkdir Temp
+
+dir
+
+New-Item -Name Pester -ItemType directory
+New-Item -Name Dir2 -ItemType directory
+New-Item -Name Dir3 -ItemType directory
+New-Item -Name Dir4 -ItemType directory
+
+
+Test-Path -Path C:\Temp\Dir1
+Test-Path -Path C:\Temp\Dir2
+Test-Path -Path C:\Temp\Dir3
+Test-Path -Path C:\Temp\Dir4
+Test-Path -Path C:\Temp\Dir5
+
+Remove-Item -Path C:\Temp\Dir3 -Force
+
+Install-Module Pester -force
+Get-module -ListAvailable -name pester
+import-module Pester
+get-module -Name pester | select -ExcludeProperty ExportedCommands
+
+New-Fixture -Path HelloWorldExample -Name Get-HelloWorld
+cd .\HelloWorldExample
+
+Invoke-Item .\Get-HelloWorld.ps1
+
+Invoke-Pester -Show summary
+
+$test = Invoke-Pester -Show summary -PassThru
+
+$test | Get-Member
+
+$test.TestResult | Select-Object Describe,Passed,time | ft
+
+Invoke-Pester -OutputFile HelloWorld.xml -OutputFormat NUnitXml -Show Fails
+
+$results = Invoke-Pester -Show summary -PassThru
+$results.TestResult | ConvertTo-Json -Depth 10 | Out-File C:\Pester\HelloWorldExample\HelloWorld.json
+
+$tempFolder = 'C:\Temp'
+Push-Location $tempFolder
+#download and extract ReportUnit.exe
+$url = 'http://relevantcodes.com/Tools/ReportUnit/reportunit-1.2.zip'
+$fullPath = Join-Path $tempFolder $url.Split("/")[-1]
+$reportunit = $tempFolder + '\reportunit.exe'
+if((Test-Path $reportunit) -eq $false)
+{
+(New-Object Net.WebClient).DownloadFile($url,$fullPath)
+Expand-Archive -Path $fullPath -DestinationPath $tempFolder
+}
+#run reportunit against report.xml and display result in browser
+$HTML = $tempFolder  + 'index.html'
+& .\reportunit.exe $tempFolder 'C:\Pester\HelloWorldExample\HelloWorld.xml'
+ii $HTML
